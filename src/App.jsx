@@ -118,11 +118,11 @@ export default function PdfReaderLandingPage() {
         <header className={`flex flex-wrap items-center justify-between gap-4 border-b ${theme.border} pb-5`}>
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center">
-              <img src="/logo.png" alt="PDFReader logo" className="h-12 w-12 object-contain" />
+              <img src="/logo.png" alt="PDFReadr logo" className="h-12 w-12 object-contain" />
             </div>
             <div>
-              <div className={`text-xs uppercase tracking-[0.3em] ${theme.subtle}`}>PDFReader Company Inc.</div>
-              <h1 className="mt-1 text-lg font-semibold text-current">PDFReader</h1>
+              <div className={`text-xs uppercase tracking-[0.3em] ${theme.subtle}`}>PDFReadr Company Inc.</div>
+              <h1 className="mt-1 text-lg font-semibold text-current">PDFReadr</h1>
             </div>
           </div>
 
@@ -344,7 +344,7 @@ export default function PdfReaderLandingPage() {
               </div>
               <div className="space-y-3">
                 <div className={`rounded-[1.35rem] border p-5 ${theme.border} ${theme.card} ${theme.softShadow}`}>
-                  <h4 className="text-base font-medium text-current">What does PDFReader do?</h4>
+                  <h4 className="text-base font-medium text-current">What does PDFReadr do?</h4>
                   <p className={`mt-2 text-sm leading-6 ${theme.muted}`}>It opens PDF files in a fast, simple desktop reading interface.</p>
                 </div>
                 <div className={`rounded-[1.35rem] border p-5 ${theme.border} ${theme.card} ${theme.softShadow}`}>
@@ -362,7 +362,7 @@ export default function PdfReaderLandingPage() {
 
         <footer className={`border-t py-8 text-sm ${theme.border} ${theme.subtle}`}>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>© 2026 PDFReader Company Inc.</div>
+            <div>© 2026 PDFReadr Company Inc.</div>
             <div>Replace with your support email or Gumroad link</div>
           </div>
         </footer>
