@@ -363,7 +363,7 @@ export default function PdfReaderLandingPage() {
         <footer className={`border-t py-8 text-sm ${theme.border} ${theme.subtle}`}>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>© 2026 PDFReader Company Inc.</div>
-            <div>Replace with your support email or Gumroad link</div>
+            <div>Contact us at crystalviewproductions</div>
           </div>
         </footer>
       </section>
