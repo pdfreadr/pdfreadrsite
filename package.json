@@ -1,6 +1,6 @@
 {
-  "name": "pdf-reader-site",
-  "private": true,
+  "name": "pdfreadrsite",
+  "private": false,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
