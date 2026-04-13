@@ -1,484 +1,338 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
-const features = [
+const assetBase =
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  import.meta.env.BASE_URL
+    ? import.meta.env.BASE_URL
+    : "/";
+
+const productUrl = "#buy";
+const logoSrc = `${assetBase}assets/icon/generated/icon_256x256.png`;
+
+const lightImages = [
+  {
+    id: "reader",
+    title: "Main reader view",
+    caption:
+      "The reading workspace keeps the document front and center with tabs, page controls, and a calm layout.",
+    src: `${assetBase}LIGHT_SCREENSHOT_1.png`,
+  },
+  {
+    id: "library",
+    title: "Library and recents",
+    caption:
+      "Browse your collection, return to recent files, and move through documents without losing context.",
+    src: `${assetBase}LIGHT_SCREENSHOT_2.png`,
+  },
+  {
+    id: "tools",
+    title: "Bookmarks and tools",
+    caption:
+      "Preview the side tools for bookmarks, annotations, thumbnails, and the practical reading controls users expect.",
+    src: `${assetBase}LIGHT_SCREENSHOT_3.png`,
+  },
+];
+
+const darkImages = [
+  {
+    id: "reader",
+    title: "Main reader view",
+    caption:
+      "Dark mode keeps the same focused layout while giving long reading sessions a softer visual tone.",
+    src: `${assetBase}DARK_SCREENSHOT_1.png`,
+  },
+  {
+    id: "library",
+    title: "Library and recents",
+    caption:
+      "Show the dark library experience with a simple browsing flow and familiar navigation.",
+    src: `${assetBase}DARK_SCREENSHOT_2.png`,
+  },
+  {
+    id: "tools",
+    title: "Bookmarks and tools",
+    caption:
+      "Highlight the dark reader tools, side panels, and polished viewing controls in a matching theme.",
+    src: `${assetBase}DARK_SCREENSHOT_3.png`,
+  },
+];
+
+const featureGroups = [
   {
     title: "Focused reading",
-    text: "Open PDF and TXT files in a clean Windows workspace built for reading, not clutter.",
+    text:
+      "PDFReadr is designed so the document owns the screen. When a file opens, the interface gets out of the way and gives users a more serious desktop reading experience.",
   },
   {
-    title: "Tabbed documents",
-    text: "Work across multiple files with tabs, quick switching, and session restore.",
+    title: "Tabbed workflow",
+    text:
+      "Users can keep multiple PDF and TXT files open, switch between tabs quickly, and continue working without reopening everything from scratch.",
   },
   {
-    title: "Local library",
-    text: "Keep documents organized with recents, favorites, bookmarks, and reading progress.",
+    title: "Library and progress",
+    text:
+      "Recent documents, favorites, bookmarks, and reading progress help users stay organized across everyday document work.",
   },
   {
-    title: "Fast search",
-    text: "Find what you need quickly with local indexing and offline search tools.",
+    title: "Local-first search",
+    text:
+      "Search runs through a local workflow built for speed and privacy, making it easier to find files and return to useful content quickly.",
   },
   {
-    title: "Professional PDF tools",
-    text: "Use zoom controls, thumbnails, annotations, text selection, and printing in one place.",
+    title: "Practical PDF tools",
+    text:
+      "Zoom controls, thumbnail browsing, page navigation, text selection, annotations, and printing are all available inside the same workspace.",
   },
   {
-    title: "Windows ready",
-    text: "Built for desktop use with Explorer integration and a polished local workflow.",
+    title: "Made for Windows",
+    text:
+      "The product is shaped for desktop use, with a layout and behavior that feel at home in a Windows reading workflow.",
+  },
+];
+
+const essentials = [
+  {
+    title: "PDF and TXT support",
+    text: "Built around the file types users open every day for reading, reviewing, and reference work.",
+  },
+  {
+    title: "Light and dark reading",
+    text: "Visitors can preview both website themes, and the product story stays clean in either mode.",
+  },
+  {
+    title: "Simple purchase flow",
+    text: "A clear buy button keeps the page action-oriented and ready for your checkout link.",
   },
 ];
 
 const faqs = [
   {
-    question: "What files can users open?",
-    answer: "PDFReadr is designed for PDF and TXT documents.",
+    question: "What does PDFReadr help with?",
+    answer:
+      "It gives users a cleaner desktop workflow for opening, reading, organizing, searching, and printing PDF and TXT documents.",
   },
   {
-    question: "Does it work offline?",
-    answer: "Yes. PDFReadr uses a local-first workflow for reading, indexing, and organization.",
+    question: "Who is it for?",
+    answer:
+      "It fits people who spend real time in documents: reading reports, reviewing files, studying material, or managing a personal library.",
   },
   {
-    question: "Can users annotate and print?",
-    answer: "Yes. PDFReadr includes annotation, bookmark, search, and print features for document work.",
+    question: "Why is it different from a basic viewer?",
+    answer:
+      "The product combines a focused reader workspace with tabs, search, bookmarks, recents, and practical reading tools instead of just showing a single file.",
   },
 ];
 
-const showcaseSlides = [
-  {
-    id: "reader",
-    label: "Reader",
-    title: "Focused reading workspace",
-    description: "A large document view with tabs, page tools, and space to stay focused.",
-    accent: "#2f6fe4",
-  },
-  {
-    id: "library",
-    label: "Library",
-    title: "Organized local library",
-    description: "Keep recents, favorites, and important files easy to browse and reopen.",
-    accent: "#2b8a6d",
-  },
-  {
-    id: "search",
-    label: "Search",
-    title: "Fast local search",
-    description: "Find documents and text quickly with a simple desktop search workflow.",
-    accent: "#b07a20",
-  },
-  {
-    id: "tools",
-    label: "Tools",
-    title: "Bookmarks, notes, and print",
-    description: "Work with the practical document tools users expect in one place.",
-    accent: "#7b55d6",
-  },
-];
-
-const styles = {
-  page: {
-    minHeight: "100vh",
-    margin: 0,
-    fontFamily: '"Segoe UI", Arial, sans-serif',
-    color: "#18283a",
-    background: "#f7f9fc",
-  },
-  shell: {
-    maxWidth: 960,
-    margin: "0 auto",
-    padding: "28px 20px 64px",
-  },
-  nav: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 16,
-    marginBottom: 56,
-    flexWrap: "wrap",
-  },
-  brand: {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-  },
-  brandIcon: {
-    width: 42,
-    height: 42,
-    borderRadius: 12,
-    background: "linear-gradient(135deg, #3276e8 0%, #1f4f9f 100%)",
-    position: "relative",
-  },
-  brandDot: {
-    position: "absolute",
-    top: 8,
-    left: 13,
-    width: 15,
-    height: 15,
-    borderRadius: 999,
-    background: "#fff",
-  },
-  brandBar: {
-    position: "absolute",
-    bottom: 9,
-    left: 8,
-    width: 26,
-    height: 9,
-    borderRadius: 999,
-    background: "#fff",
-  },
-  brandName: {
-    fontSize: 20,
-    fontWeight: 700,
-    letterSpacing: "-0.03em",
-  },
-  brandTag: {
-    fontSize: 13,
-    color: "#66758a",
-  },
-  navLinks: {
-    display: "flex",
-    alignItems: "center",
-    gap: 16,
-    flexWrap: "wrap",
-  },
-  link: {
-    color: "#44566c",
-    textDecoration: "none",
-    fontSize: 14,
-    fontWeight: 600,
-  },
-  button: {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 44,
-    padding: "0 18px",
-    borderRadius: 12,
-    background: "#1f4f9f",
-    color: "#fff",
-    textDecoration: "none",
-    fontWeight: 700,
-  },
-  hero: {
-    padding: "0 0 36px",
-  },
-  badge: {
-    display: "inline-block",
-    padding: "6px 10px",
-    borderRadius: 999,
-    background: "#e9f0fd",
-    color: "#1f4f9f",
-    fontSize: 12,
-    fontWeight: 700,
-    letterSpacing: "0.06em",
-    textTransform: "uppercase",
-    marginBottom: 18,
-  },
-  title: {
-    fontSize: "clamp(2.2rem, 5vw, 3.8rem)",
-    lineHeight: 1.05,
-    letterSpacing: "-0.05em",
-    margin: "0 0 16px",
-    maxWidth: 760,
-  },
-  lead: {
-    margin: "0 0 24px",
-    maxWidth: 720,
-    fontSize: 18,
-    lineHeight: 1.7,
-    color: "#556579",
-  },
-  ctas: {
-    display: "flex",
-    gap: 12,
-    flexWrap: "wrap",
-    marginBottom: 32,
-  },
-  showcase: {
-    background: "#ffffff",
-    border: "1px solid #e3e9f2",
-    borderRadius: 20,
-    padding: 16,
-    marginBottom: 32,
-  },
-  showcaseFrame: {
-    background: "#f2f6fb",
-    border: "1px solid #e0e7f1",
-    borderRadius: 16,
-    padding: 14,
-  },
-  window: {
-    background: "#ffffff",
-    borderRadius: 14,
-    border: "1px solid #e2e8f1",
-    overflow: "hidden",
-    minHeight: 320,
-  },
-  windowBar: {
-    height: 40,
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-    padding: "0 14px",
-    background: "#f7f9fc",
-    borderBottom: "1px solid #e5ebf3",
-  },
-  windowDot: (color) => ({
-    width: 10,
-    height: 10,
-    borderRadius: 999,
-    background: color,
-  }),
-  windowTabs: {
-    display: "flex",
-    gap: 8,
-    padding: "12px 14px 0",
-    flexWrap: "wrap",
-  },
-  windowTab: (active) => ({
-    padding: "8px 12px",
-    borderRadius: 10,
-    background: active ? "#edf3ff" : "#f5f7fb",
-    border: active ? "1px solid #cfe0ff" : "1px solid #e5ebf3",
-    color: active ? "#1f4f9f" : "#5e6d81",
-    fontSize: 13,
-    fontWeight: 700,
-  }),
-  windowBody: {
-    display: "grid",
-    gridTemplateColumns: "92px minmax(0, 1fr)",
-    gap: 14,
-    padding: 14,
-  },
-  sideColumn: {
-    display: "grid",
-    gap: 10,
-  },
-  sideThumb: {
-    height: 60,
-    borderRadius: 12,
-    background: "#f5f7fb",
-    border: "1px solid #e4eaf2",
-  },
-  documentCard: {
-    minHeight: 220,
-    borderRadius: 14,
-    border: "1px solid #e2e8f1",
-    background: "#ffffff",
-    padding: 18,
-  },
-  showcaseTitle: {
-    margin: "0 0 8px",
-    fontSize: 24,
-    fontWeight: 800,
-    letterSpacing: "-0.04em",
-  },
-  showcaseText: {
-    margin: "0 0 16px",
-    color: "#5d6c80",
-    lineHeight: 1.7,
-  },
-  lineStack: {
-    display: "grid",
-    gap: 10,
-  },
-  line: (width, color) => ({
-    width,
-    height: 10,
-    borderRadius: 999,
-    background: color,
-  }),
-  noteBox: (accent) => ({
-    marginTop: 18,
-    padding: "14px 16px",
-    borderRadius: 14,
-    background: `${accent}12`,
-    border: `1px solid ${accent}30`,
-    color: "#324255",
-    fontWeight: 600,
-  }),
-  thumbnailRow: {
-    display: "grid",
-    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-    gap: 10,
-    marginTop: 12,
-  },
-  thumbnailButton: (active) => ({
-    textAlign: "left",
-    borderRadius: 12,
-    border: active ? "1px solid #bfd3f7" : "1px solid #e3e9f2",
-    background: active ? "#f3f7ff" : "#ffffff",
-    padding: 12,
-    cursor: "pointer",
-  }),
-  thumbnailLabel: {
-    fontSize: 12,
-    color: "#6b7a8d",
-    marginBottom: 4,
-  },
-  thumbnailTitle: {
-    fontSize: 14,
-    fontWeight: 700,
-    color: "#203246",
-  },
-  secondaryButton: {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 44,
-    padding: "0 18px",
-    borderRadius: 12,
-    background: "#ffffff",
-    color: "#1f4f9f",
-    textDecoration: "none",
-    fontWeight: 700,
-    border: "1px solid #d9e2ef",
-  },
-  summaryRow: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-    gap: 14,
-  },
-  summaryCard: {
-    background: "#ffffff",
-    border: "1px solid #e3e9f2",
-    borderRadius: 16,
-    padding: "18px 16px",
-  },
-  summaryValue: {
-    fontSize: 28,
-    fontWeight: 800,
-    letterSpacing: "-0.04em",
-    marginBottom: 6,
-  },
-  summaryLabel: {
-    fontSize: 14,
-    color: "#5e6d81",
-  },
-  section: {
-    marginTop: 48,
-  },
-  sectionTitle: {
-    fontSize: 28,
-    letterSpacing: "-0.03em",
-    margin: "0 0 10px",
-  },
-  sectionText: {
-    margin: "0 0 20px",
-    color: "#5b6a7d",
-    lineHeight: 1.7,
-    maxWidth: 680,
-  },
-  featureGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-    gap: 14,
-  },
-  featureCard: {
-    background: "#ffffff",
-    border: "1px solid #e3e9f2",
-    borderRadius: 16,
-    padding: 20,
-  },
-  featureTitle: {
-    margin: "0 0 8px",
-    fontSize: 18,
-    fontWeight: 700,
-  },
-  featureText: {
-    margin: 0,
-    color: "#5b6a7d",
-    lineHeight: 1.7,
-    fontSize: 15,
-  },
-  faqList: {
-    display: "grid",
-    gap: 12,
-  },
-  faqItem: {
-    background: "#ffffff",
-    border: "1px solid #e3e9f2",
-    borderRadius: 16,
-    padding: 20,
-  },
-  faqQuestion: {
-    margin: "0 0 8px",
-    fontSize: 17,
-    fontWeight: 700,
-  },
-  faqAnswer: {
-    margin: 0,
-    color: "#5b6a7d",
-    lineHeight: 1.7,
-  },
-  ctaPanel: {
-    marginTop: 48,
-    background: "#ffffff",
-    border: "1px solid #e3e9f2",
-    borderRadius: 20,
-    padding: "28px 24px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 16,
-    flexWrap: "wrap",
-  },
-  footer: {
-    marginTop: 36,
-    color: "#738296",
-    fontSize: 14,
-  },
-};
-
-function Brand() {
-  return (
-    <div style={styles.brand}>
-      <div style={styles.brandIcon} aria-hidden="true">
-        <div style={styles.brandDot} />
-        <div style={styles.brandBar} />
-      </div>
-      <div>
-        <div style={styles.brandName}>PDFReadr</div>
-        <div style={styles.brandTag}>Fast local document reader</div>
-      </div>
-    </div>
-  );
+function makeTheme(darkMode) {
+  return darkMode
+    ? {
+        pageBg: "#050608",
+        pageGradient:
+          "radial-gradient(circle at top left, rgba(28,33,41,0.9), transparent 34%), linear-gradient(180deg, #050608 0%, #0b1117 100%)",
+        panel: "#11161d",
+        panelAlt: "#161d26",
+        border: "#293342",
+        text: "#f3f5f8",
+        muted: "#a9b4c2",
+        subtle: "#7f8c9d",
+        accent: "#7db3ff",
+        accentStrong: "#4f8ef7",
+        accentSoft: "rgba(125,179,255,0.12)",
+        buttonText: "#08111c",
+        buttonBg: "#dbe8ff",
+        secondaryBg: "#161d26",
+        secondaryText: "#f3f5f8",
+        cardShadow: "0 20px 60px rgba(0,0,0,0.34)",
+        screenshotBg: "#0d131a",
+      }
+    : {
+        pageBg: "#f7f8fa",
+        pageGradient:
+          "radial-gradient(circle at top left, rgba(241,228,200,0.55), transparent 28%), linear-gradient(180deg, #f7f8fa 0%, #f6f1e8 100%)",
+        panel: "#ffffff",
+        panelAlt: "#f6f8fb",
+        border: "#dce3eb",
+        text: "#18232f",
+        muted: "#5f6d80",
+        subtle: "#7c8898",
+        accent: "#2357b8",
+        accentStrong: "#1c4b9c",
+        accentSoft: "rgba(35,87,184,0.1)",
+        buttonText: "#ffffff",
+        buttonBg: "#2357b8",
+        secondaryBg: "#ffffff",
+        secondaryText: "#1b3557",
+        cardShadow: "0 18px 44px rgba(16,31,54,0.08)",
+        screenshotBg: "#eef2f7",
+      };
 }
 
-function Showcase({ slide }) {
+function ScreenshotFallback({ theme, item, darkMode }) {
   return (
-    <div style={styles.showcaseFrame}>
-      <div style={styles.window}>
-        <div style={styles.windowBar}>
-          <span style={styles.windowDot("#ff6157")} />
-          <span style={styles.windowDot("#ffbe2f")} />
-          <span style={styles.windowDot("#28c840")} />
-        </div>
-
-        <div style={styles.windowTabs}>
-          <div style={styles.windowTab(true)}>{slide.label}</div>
-          <div style={styles.windowTab(false)}>Document</div>
-          <div style={styles.windowTab(false)}>Search</div>
-        </div>
-
-        <div style={styles.windowBody}>
-          <div style={styles.sideColumn}>
-            <div style={styles.sideThumb} />
-            <div style={styles.sideThumb} />
-            <div style={styles.sideThumb} />
+    <div
+      style={{
+        width: "100%",
+        minHeight: 520,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: theme.screenshotBg,
+        color: theme.text,
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 860,
+          padding: 24,
+        }}
+      >
+        <div
+          style={{
+            border: `1px solid ${theme.border}`,
+            borderRadius: 22,
+            overflow: "hidden",
+            background: theme.panel,
+            boxShadow: theme.cardShadow,
+          }}
+        >
+          <div
+            style={{
+              height: 46,
+              borderBottom: `1px solid ${theme.border}`,
+              background: theme.panelAlt,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "0 16px",
+            }}
+          >
+            <span
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: 999,
+                background: "#ff6157",
+              }}
+            />
+            <span
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: 999,
+                background: "#ffbe2f",
+              }}
+            />
+            <span
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: 999,
+                background: "#28c840",
+              }}
+            />
           </div>
 
-          <div style={styles.documentCard}>
-            <h3 style={styles.showcaseTitle}>{slide.title}</h3>
-            <p style={styles.showcaseText}>{slide.description}</p>
-
-            <div style={styles.lineStack}>
-              <div style={styles.line("54%", slide.accent)} />
-              <div style={styles.line("88%", "#d8e0eb")} />
-              <div style={styles.line("76%", "#d8e0eb")} />
-              <div style={styles.line("92%", "#d8e0eb")} />
-              <div style={styles.line("67%", "#d8e0eb")} />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "96px minmax(0, 1fr)",
+              gap: 16,
+              padding: 18,
+            }}
+          >
+            <div style={{ display: "grid", gap: 10 }}>
+              {[0, 1, 2].map((index) => (
+                <div
+                  key={index}
+                  style={{
+                    height: 62,
+                    borderRadius: 14,
+                    background: theme.panelAlt,
+                    border: `1px solid ${theme.border}`,
+                  }}
+                />
+              ))}
             </div>
 
-            <div style={styles.noteBox(slide.accent)}>{slide.description}</div>
+            <div
+              style={{
+                minHeight: 300,
+                borderRadius: 18,
+                border: `1px solid ${theme.border}`,
+                background: theme.panel,
+                padding: 24,
+              }}
+            >
+              <div
+                style={{
+                  display: "inline-block",
+                  marginBottom: 12,
+                  padding: "6px 10px",
+                  borderRadius: 999,
+                  background: theme.accentSoft,
+                  color: theme.accent,
+                  fontSize: 12,
+                  fontWeight: 700,
+                }}
+              >
+                {darkMode ? "Dark preview" : "Light preview"}
+              </div>
+              <h3
+                style={{
+                  margin: "0 0 10px",
+                  fontSize: 28,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                {item.title}
+              </h3>
+              <p
+                style={{
+                  margin: "0 0 20px",
+                  color: theme.muted,
+                  lineHeight: 1.7,
+                  fontSize: 16,
+                }}
+              >
+                {item.caption}
+              </p>
+              <div style={{ display: "grid", gap: 10 }}>
+                <div
+                  style={{
+                    width: "54%",
+                    height: 10,
+                    borderRadius: 999,
+                    background: theme.accentStrong,
+                  }}
+                />
+                <div
+                  style={{
+                    width: "88%",
+                    height: 10,
+                    borderRadius: 999,
+                    background: theme.border,
+                  }}
+                />
+                <div
+                  style={{
+                    width: "76%",
+                    height: 10,
+                    borderRadius: 999,
+                    background: theme.border,
+                  }}
+                />
+                <div
+                  style={{
+                    width: "92%",
+                    height: 10,
+                    borderRadius: 999,
+                    background: theme.border,
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -486,144 +340,746 @@ function Showcase({ slide }) {
   );
 }
 
-function App() {
-  const [activeSlideId, setActiveSlideId] = useState(showcaseSlides[0].id);
-  const activeSlide =
-    showcaseSlides.find((slide) => slide.id === activeSlideId) ??
-    showcaseSlides[0];
+function PreviewImage({ item, theme, darkMode }) {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    return <ScreenshotFallback theme={theme} item={item} darkMode={darkMode} />;
+  }
 
   return (
-    <div style={styles.page}>
+    <img
+      src={item.src}
+      alt={item.title}
+      onError={() => setHasError(true)}
+      style={{
+        display: "block",
+        width: "100%",
+        maxHeight: 520,
+        objectFit: "contain",
+        background: theme.screenshotBg,
+      }}
+    />
+  );
+}
+
+function Brand({ theme, darkMode }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+      <div
+        style={{
+          width: 48,
+          height: 48,
+          borderRadius: 14,
+          background: darkMode
+            ? "linear-gradient(145deg, #7db3ff 0%, #4f8ef7 100%)"
+            : "linear-gradient(145deg, #4b8cff 0%, #2357b8 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+          boxShadow: theme.cardShadow,
+        }}
+      >
+        <img
+          src={logoSrc}
+          alt="PDFReadr logo"
+          style={{ width: 34, height: 34, objectFit: "contain" }}
+        />
+      </div>
+      <div>
+        <div
+          style={{
+            fontSize: 20,
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+            color: theme.text,
+          }}
+        >
+          PDFReadr
+        </div>
+        <div style={{ fontSize: 13, color: theme.subtle }}>
+          Fast local document reader
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
+
+  const theme = useMemo(() => makeTheme(darkMode), [darkMode]);
+  const previewImages = darkMode ? darkImages : lightImages;
+  const safeActiveImage = Math.min(
+    activeImage,
+    Math.max(previewImages.length - 1, 0),
+  );
+  const selectedImage = previewImages[safeActiveImage] || previewImages[0];
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: theme.pageBg,
+        backgroundImage: theme.pageGradient,
+        color: theme.text,
+        fontFamily: '"Segoe UI", Arial, sans-serif',
+        transition: "background-color 180ms ease, color 180ms ease",
+      }}
+    >
       <style>{`
         * { box-sizing: border-box; }
         body { margin: 0; }
-        @media (max-width: 720px) {
-          .summary-row,
+        button { font: inherit; }
+        @media (max-width: 900px) {
+          .preview-layout,
+          .overview-grid,
+          .essentials-grid,
           .feature-grid,
-          .thumbnail-row {
+          .footer-row {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: 720px) {
+          .hero-actions,
+          .top-actions,
+          .thumb-grid {
             grid-template-columns: 1fr !important;
           }
         }
       `}</style>
 
-      <div style={styles.shell}>
-        <nav style={styles.nav}>
-          <Brand />
-          <div style={styles.navLinks}>
-            <a href="#features" style={styles.link}>
-              Features
-            </a>
-            <a href="#faq" style={styles.link}>
-              FAQ
-            </a>
-            <a href="#buy" style={styles.button}>
-              Buy
-            </a>
-          </div>
-        </nav>
+      <div
+        style={{
+          maxWidth: 1180,
+          margin: "0 auto",
+          padding: "28px 20px 72px",
+        }}
+      >
+        <header
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            flexWrap: "wrap",
+            paddingBottom: 20,
+            marginBottom: 40,
+            borderBottom: `1px solid ${theme.border}`,
+          }}
+        >
+          <Brand theme={theme} darkMode={darkMode} />
 
-        <section style={styles.hero}>
-          <div style={styles.badge}>Windows Desktop App</div>
-          <h1 style={styles.title}>
-            A clean, professional way to read and manage PDF and TXT documents.
-          </h1>
-          <p style={styles.lead}>
-            PDFReadr helps users open, organize, search, annotate, and print
-            documents in one focused desktop workspace. It is built for people who
-            want a simple reading experience with the tools they actually use.
-          </p>
+          <div
+            className="top-actions"
+            style={{
+              display: "grid",
+              gridAutoFlow: "column",
+              gap: 12,
+              alignItems: "center",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => {
+                setDarkMode((previous) => !previous);
+                setActiveImage(0);
+              }}
+              style={{
+                height: 44,
+                padding: "0 16px",
+                borderRadius: 999,
+                border: `1px solid ${theme.border}`,
+                background: theme.secondaryBg,
+                color: theme.secondaryText,
+                cursor: "pointer",
+              }}
+            >
+              {darkMode ? "Light mode" : "Dark mode"}
+            </button>
 
-          <div style={styles.ctas}>
-            <a href="#buy" style={styles.button}>
+            <a
+              href={productUrl}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 44,
+                padding: "0 18px",
+                borderRadius: 999,
+                background: theme.buttonBg,
+                color: theme.buttonText,
+                textDecoration: "none",
+                fontWeight: 700,
+              }}
+            >
               Buy PDFReadr
             </a>
-            <a href="#features" style={styles.secondaryButton}>
-              View Features
-            </a>
           </div>
+        </header>
 
-          <div style={styles.showcase}>
-            <Showcase slide={activeSlide} />
+        <main>
+          <section style={{ paddingBottom: 24 }}>
+            <div
+              style={{
+                display: "inline-flex",
+                padding: "7px 12px",
+                borderRadius: 999,
+                background: theme.accentSoft,
+                color: theme.accent,
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                marginBottom: 18,
+              }}
+            >
+              Windows Desktop Reader
+            </div>
 
-            <div className="thumbnail-row" style={styles.thumbnailRow}>
-              {showcaseSlides.map((slide) => (
-                <button
-                  key={slide.id}
-                  type="button"
-                  onClick={() => setActiveSlideId(slide.id)}
-                  style={styles.thumbnailButton(slide.id === activeSlide.id)}
+            <h1
+              style={{
+                margin: "0 0 14px",
+                maxWidth: 820,
+                fontSize: "clamp(2.4rem, 5vw, 4.6rem)",
+                lineHeight: 1.02,
+                letterSpacing: "-0.05em",
+              }}
+            >
+              A cleaner way to read, organize, and work through PDF and TXT files.
+            </h1>
+
+            <p
+              style={{
+                margin: "0 0 24px",
+                maxWidth: 760,
+                color: theme.muted,
+                fontSize: 18,
+                lineHeight: 1.75,
+              }}
+            >
+              PDFReadr is built for people who spend real time in documents. It
+              brings together focused reading, tabbed file handling, local search,
+              bookmarks, annotations, and printing in a layout that stays simple
+              and easy to use.
+            </p>
+
+            <div
+              className="hero-actions"
+              style={{
+                display: "grid",
+                gridAutoFlow: "column",
+                justifyContent: "start",
+                gap: 12,
+                marginBottom: 28,
+              }}
+            >
+              <a
+                href={productUrl}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: 48,
+                  padding: "0 22px",
+                  borderRadius: 14,
+                  background: theme.buttonBg,
+                  color: theme.buttonText,
+                  textDecoration: "none",
+                  fontWeight: 700,
+                }}
+              >
+                Buy Now
+              </a>
+              <a
+                href="#features"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: 48,
+                  padding: "0 22px",
+                  borderRadius: 14,
+                  background: theme.secondaryBg,
+                  color: theme.secondaryText,
+                  border: `1px solid ${theme.border}`,
+                  textDecoration: "none",
+                  fontWeight: 700,
+                }}
+              >
+                View Features
+              </a>
+            </div>
+
+            <div
+              style={{
+                border: `1px solid ${theme.border}`,
+                borderRadius: 30,
+                background: theme.panel,
+                boxShadow: theme.cardShadow,
+                padding: 18,
+              }}
+            >
+              <div
+                style={{
+                  position: "relative",
+                  borderRadius: 24,
+                  overflow: "hidden",
+                  border: `1px solid ${theme.border}`,
+                  background: theme.screenshotBg,
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: 18,
+                    transform: "translateX(-50%)",
+                    zIndex: 1,
+                  }}
                 >
-                  <div style={styles.thumbnailLabel}>{slide.label}</div>
-                  <div style={styles.thumbnailTitle}>{slide.title}</div>
-                </button>
+                  <a
+                    href={productUrl}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: 46,
+                      padding: "0 22px",
+                      borderRadius: 999,
+                      background: theme.buttonBg,
+                      color: theme.buttonText,
+                      textDecoration: "none",
+                      fontWeight: 700,
+                      boxShadow: theme.cardShadow,
+                    }}
+                  >
+                    Buy PDFReadr
+                  </a>
+                </div>
+
+                <PreviewImage
+                  item={selectedImage}
+                  theme={theme}
+                  darkMode={darkMode}
+                />
+              </div>
+
+              <div
+                className="preview-layout"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "0.84fr 1.16fr",
+                  gap: 16,
+                  marginTop: 18,
+                }}
+              >
+                <div
+                  style={{
+                    border: `1px solid ${theme.border}`,
+                    borderRadius: 20,
+                    background: theme.panel,
+                    padding: 18,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      padding: "5px 10px",
+                      borderRadius: 999,
+                      background: theme.accentSoft,
+                      color: theme.accent,
+                      fontSize: 12,
+                      fontWeight: 700,
+                      marginBottom: 12,
+                    }}
+                  >
+                    {darkMode ? "Dark preview" : "Light preview"}
+                  </div>
+                  <h2
+                    style={{
+                      margin: "0 0 8px",
+                      fontSize: 22,
+                      letterSpacing: "-0.03em",
+                    }}
+                  >
+                    {selectedImage.title}
+                  </h2>
+                  <p
+                    style={{
+                      margin: 0,
+                      color: theme.muted,
+                      lineHeight: 1.75,
+                    }}
+                  >
+                    {selectedImage.caption}
+                  </p>
+                </div>
+
+                <div
+                  className="thumb-grid"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                    gap: 12,
+                  }}
+                >
+                  {previewImages.map((image, index) => (
+                    <button
+                      key={`${darkMode ? "dark" : "light"}-${image.id}`}
+                      type="button"
+                      onClick={() => setActiveImage(index)}
+                      aria-pressed={safeActiveImage === index}
+                      style={{
+                        padding: 0,
+                        textAlign: "left",
+                        borderRadius: 18,
+                        overflow: "hidden",
+                        border: `1px solid ${theme.border}`,
+                        background: theme.panel,
+                        cursor: "pointer",
+                        outline:
+                          safeActiveImage === index
+                            ? `2px solid ${theme.accentStrong}`
+                            : "none",
+                        boxShadow: safeActiveImage === index
+                          ? theme.cardShadow
+                          : "none",
+                      }}
+                    >
+                      <div
+                        style={{
+                          aspectRatio: "4 / 3",
+                          background: theme.screenshotBg,
+                          borderBottom: `1px solid ${theme.border}`,
+                          overflow: "hidden",
+                        }}
+                      >
+                        <img
+                          src={image.src}
+                          alt={image.title}
+                          onError={(event) => {
+                            event.currentTarget.style.display = "none";
+                          }}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </div>
+                      <div style={{ padding: 12 }}>
+                        <div
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 700,
+                            color: theme.text,
+                          }}
+                        >
+                          {image.title}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section
+            style={{
+              padding: "42px 0 10px",
+              borderTop: `1px solid ${theme.border}`,
+              marginTop: 28,
+            }}
+          >
+            <div
+              className="overview-grid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "0.95fr 1.05fr",
+                gap: 20,
+                alignItems: "start",
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    color: theme.subtle,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    marginBottom: 12,
+                  }}
+                >
+                  Overview
+                </div>
+                <h2
+                  style={{
+                    margin: "0 0 12px",
+                    fontSize: 34,
+                    lineHeight: 1.1,
+                    letterSpacing: "-0.04em",
+                  }}
+                >
+                  Minimal on the page, substantial in the product.
+                </h2>
+                <p
+                  style={{
+                    margin: 0,
+                    color: theme.muted,
+                    lineHeight: 1.8,
+                    maxWidth: 520,
+                  }}
+                >
+                  The goal is the same as the reader itself: show what matters,
+                  reduce clutter, and make the next action obvious. Buyers get a
+                  clear view of the app, a simple understanding of the feature
+                  set, and a direct path to purchase.
+                </p>
+              </div>
+
+              <div
+                className="feature-grid"
+                id="features"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gap: 14,
+                }}
+              >
+                {featureGroups.map((item) => (
+                  <article
+                    key={item.title}
+                    style={{
+                      border: `1px solid ${theme.border}`,
+                      borderRadius: 20,
+                      background: theme.panel,
+                      padding: 18,
+                    }}
+                  >
+                    <h3
+                      style={{
+                        margin: "0 0 8px",
+                        fontSize: 18,
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      {item.title}
+                    </h3>
+                    <p
+                      style={{
+                        margin: 0,
+                        color: theme.muted,
+                        lineHeight: 1.75,
+                        fontSize: 15,
+                      }}
+                    >
+                      {item.text}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section
+            style={{
+              padding: "38px 0 10px",
+              borderTop: `1px solid ${theme.border}`,
+              marginTop: 28,
+            }}
+          >
+            <div
+              className="essentials-grid"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: 14,
+              }}
+            >
+              {essentials.map((item) => (
+                <article
+                  key={item.title}
+                  style={{
+                    border: `1px solid ${theme.border}`,
+                    borderRadius: 20,
+                    background: theme.panel,
+                    padding: 18,
+                  }}
+                >
+                  <h3
+                    style={{
+                      margin: "0 0 8px",
+                      fontSize: 17,
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    style={{
+                      margin: 0,
+                      color: theme.muted,
+                      lineHeight: 1.75,
+                      fontSize: 15,
+                    }}
+                  >
+                    {item.text}
+                  </p>
+                </article>
               ))}
             </div>
-          </div>
+          </section>
 
-          <div className="summary-row" style={styles.summaryRow}>
-            <div style={styles.summaryCard}>
-              <div style={styles.summaryValue}>PDF + TXT</div>
-              <div style={styles.summaryLabel}>Document support for everyday reading workflows</div>
+          <section
+            id="buy"
+            style={{
+              padding: "42px 0 10px",
+              borderTop: `1px solid ${theme.border}`,
+              marginTop: 28,
+            }}
+          >
+            <div
+              style={{
+                border: `1px solid ${theme.border}`,
+                borderRadius: 28,
+                background: theme.panel,
+                padding: 28,
+                boxShadow: theme.cardShadow,
+              }}
+            >
+              <div
+                className="overview-grid"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 0.9fr",
+                  gap: 20,
+                  alignItems: "center",
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      color: theme.subtle,
+                      fontSize: 12,
+                      fontWeight: 700,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                      marginBottom: 12,
+                    }}
+                  >
+                    Buy
+                  </div>
+                  <h2
+                    style={{
+                      margin: "0 0 10px",
+                      fontSize: 34,
+                      lineHeight: 1.1,
+                      letterSpacing: "-0.04em",
+                    }}
+                  >
+                    A straightforward page for a straightforward product.
+                  </h2>
+                  <p
+                    style={{
+                      margin: "0 0 18px",
+                      color: theme.muted,
+                      lineHeight: 1.8,
+                      maxWidth: 560,
+                    }}
+                  >
+                    Use the main buy button for your checkout link. The page is
+                    already set up to show the product clearly, reinforce the
+                    feature set, and keep the purchase step simple.
+                  </p>
+                  <a
+                    href={productUrl}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: 48,
+                      padding: "0 22px",
+                      borderRadius: 14,
+                      background: theme.buttonBg,
+                      color: theme.buttonText,
+                      textDecoration: "none",
+                      fontWeight: 700,
+                    }}
+                  >
+                    Continue to Buy
+                  </a>
+                </div>
+
+                <div
+                  id="faq"
+                  style={{
+                    display: "grid",
+                    gap: 12,
+                  }}
+                >
+                  {faqs.map((item) => (
+                    <article
+                      key={item.question}
+                      style={{
+                        border: `1px solid ${theme.border}`,
+                        borderRadius: 18,
+                        background: theme.panelAlt,
+                        padding: 16,
+                      }}
+                    >
+                      <h3
+                        style={{
+                          margin: "0 0 6px",
+                          fontSize: 16,
+                        }}
+                      >
+                        {item.question}
+                      </h3>
+                      <p
+                        style={{
+                          margin: 0,
+                          color: theme.muted,
+                          lineHeight: 1.7,
+                          fontSize: 14,
+                        }}
+                      >
+                        {item.answer}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div style={styles.summaryCard}>
-              <div style={styles.summaryValue}>Local-first</div>
-              <div style={styles.summaryLabel}>Reading, indexing, and organization stay on device</div>
-            </div>
-            <div style={styles.summaryCard}>
-              <div style={styles.summaryValue}>Built for Windows</div>
-              <div style={styles.summaryLabel}>Desktop workflow with tabs, search, and printing</div>
-            </div>
+          </section>
+        </main>
+
+        <footer
+          style={{
+            marginTop: 38,
+            paddingTop: 18,
+            borderTop: `1px solid ${theme.border}`,
+            color: theme.subtle,
+            fontSize: 14,
+          }}
+        >
+          <div
+            className="footer-row"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr auto",
+              gap: 12,
+              alignItems: "center",
+            }}
+          >
+            <div>PDFReadr for Windows</div>
+            <div>Replace the buy link and screenshot files with your final assets</div>
           </div>
-        </section>
-
-        <section id="features" style={styles.section}>
-          <h2 style={styles.sectionTitle}>Features</h2>
-          <p style={styles.sectionText}>
-            Everything important is easy to scan and easy to understand.
-          </p>
-
-          <div className="feature-grid" style={styles.featureGrid}>
-            {features.map((feature) => (
-              <article key={feature.title} style={styles.featureCard}>
-                <h3 style={styles.featureTitle}>{feature.title}</h3>
-                <p style={styles.featureText}>{feature.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="faq" style={styles.section}>
-          <h2 style={styles.sectionTitle}>FAQ</h2>
-          <p style={styles.sectionText}>
-            Short answers to the questions most buyers ask first.
-          </p>
-
-          <div style={styles.faqList}>
-            {faqs.map((item) => (
-              <article key={item.question} style={styles.faqItem}>
-                <h3 style={styles.faqQuestion}>{item.question}</h3>
-                <p style={styles.faqAnswer}>{item.answer}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="buy" style={styles.ctaPanel}>
-          <div>
-            <h2 style={{ ...styles.sectionTitle, margin: "0 0 8px" }}>Ready to buy?</h2>
-            <p style={{ ...styles.sectionText, margin: 0 }}>
-              Add your pricing, checkout, or download link here.
-            </p>
-          </div>
-          <a href="#pricing" style={styles.button}>
-            See Pricing
-          </a>
-        </section>
-
-        <footer style={styles.footer}>PDFReadr for Windows</footer>
+        </footer>
       </div>
     </div>
   );
 }
-
-export default App;
