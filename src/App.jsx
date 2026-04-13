@@ -1,519 +1,193 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from 'react'
 
 const assetBase =
-  typeof import.meta !== "undefined" &&
+  typeof import.meta !== 'undefined' &&
   import.meta.env &&
   import.meta.env.BASE_URL
     ? import.meta.env.BASE_URL
-    : "/";
+    : '/'
 
-const productUrl = "#buy";
-const logoSrc = `${assetBase}assets/icon/generated/icon_256x256.png`;
+const productUrl = '#buying'
+const logoSrc = `${assetBase}logo.png`
 
-const lightImages = [
-  {
-    id: "reader",
-    title: "Main reader view",
-    caption:
-      "The reading workspace keeps the document front and center with tabs, page controls, and a calm layout.",
-    src: `${assetBase}LIGHT_SCREENSHOT_1.png`,
-  },
-  {
-    id: "library",
-    title: "Library and recents",
-    caption:
-      "Browse your collection, return to recent files, and move through documents without losing context.",
-    src: `${assetBase}LIGHT_SCREENSHOT_2.png`,
-  },
-  {
-    id: "tools",
-    title: "Bookmarks and tools",
-    caption:
-      "Preview the side tools for bookmarks, annotations, thumbnails, and the practical reading controls users expect.",
-    src: `${assetBase}LIGHT_SCREENSHOT_3.png`,
-  },
-];
+export default function PdfReadrLandingPage() {
+  const [darkMode, setDarkMode] = useState(false)
+  const [activeImage, setActiveImage] = useState(0)
 
-const darkImages = [
-  {
-    id: "reader",
-    title: "Main reader view",
-    caption:
-      "Dark mode keeps the same focused layout while giving long reading sessions a softer visual tone.",
-    src: `${assetBase}DARK_SCREENSHOT_1.png`,
-  },
-  {
-    id: "library",
-    title: "Library and recents",
-    caption:
-      "Show the dark library experience with a simple browsing flow and familiar navigation.",
-    src: `${assetBase}DARK_SCREENSHOT_2.png`,
-  },
-  {
-    id: "tools",
-    title: "Bookmarks and tools",
-    caption:
-      "Highlight the dark reader tools, side panels, and polished viewing controls in a matching theme.",
-    src: `${assetBase}DARK_SCREENSHOT_3.png`,
-  },
-];
+  const theme = useMemo(() => {
+    return darkMode
+      ? {
+          pageBg: 'bg-zinc-950',
+          text: 'text-zinc-100',
+          muted: 'text-zinc-400',
+          subtle: 'text-zinc-500',
+          border: 'border-zinc-800',
+          card: 'bg-zinc-900',
+          cardAlt: 'bg-zinc-900',
+          panel: 'bg-zinc-950',
+          buttonPrimary: 'bg-white text-zinc-950 hover:bg-zinc-200',
+          buttonSecondary: 'bg-zinc-900 text-white hover:bg-zinc-800',
+          pill: 'bg-zinc-900 text-zinc-400 border-zinc-800',
+          shadow: 'shadow-[0_24px_70px_rgba(0,0,0,0.32)]',
+          softShadow: 'shadow-[0_8px_24px_rgba(0,0,0,0.18)]',
+          accentRing: 'ring-zinc-400',
+        }
+      : {
+          pageBg: 'bg-stone-50',
+          text: 'text-zinc-900',
+          muted: 'text-stone-600',
+          subtle: 'text-stone-500',
+          border: 'border-stone-200',
+          card: 'bg-white',
+          cardAlt: 'bg-stone-100',
+          panel: 'bg-white',
+          buttonPrimary: 'bg-zinc-900 text-white hover:bg-zinc-700',
+          buttonSecondary: 'bg-white text-zinc-900 hover:bg-stone-100',
+          pill: 'bg-white text-stone-500 border-stone-200',
+          shadow: 'shadow-[0_24px_70px_rgba(0,0,0,0.06)]',
+          softShadow: 'shadow-[0_8px_24px_rgba(0,0,0,0.04)]',
+          accentRing: 'ring-zinc-400',
+        }
+  }, [darkMode])
 
-const featureGroups = [
-  {
-    title: "Focused reading",
-    text:
-      "PDFReadr is designed so the document owns the screen. When a file opens, the interface gets out of the way and gives users a more serious desktop reading experience.",
-  },
-  {
-    title: "Tabbed workflow",
-    text:
-      "Users can keep multiple PDF and TXT files open, switch between tabs quickly, and continue working without reopening everything from scratch.",
-  },
-  {
-    title: "Library and progress",
-    text:
-      "Recent documents, favorites, bookmarks, and reading progress help users stay organized across everyday document work.",
-  },
-  {
-    title: "Local-first search",
-    text:
-      "Search runs through a local workflow built for speed and privacy, making it easier to find files and return to useful content quickly.",
-  },
-  {
-    title: "Practical PDF tools",
-    text:
-      "Zoom controls, thumbnail browsing, page navigation, text selection, annotations, and printing are all available inside the same workspace.",
-  },
-  {
-    title: "Made for Windows",
-    text:
-      "The product is shaped for desktop use, with a layout and behavior that feel at home in a Windows reading workflow.",
-  },
-];
+  const lightImages = [
+    {
+      id: 'reader',
+      title: 'Main reader view',
+      text: 'Keep the document front and center with tabs, page controls, and a calm reading layout.',
+      src: `${assetBase}LIGHT_SCREENSHOT_1.png`,
+    },
+    {
+      id: 'library',
+      title: 'Library and recents',
+      text: 'Return to recent files, browse your collection, and move between documents without losing your place.',
+      src: `${assetBase}LIGHT_SCREENSHOT_2.png`,
+    },
+    {
+      id: 'tools',
+      title: 'Bookmarks, annotations, and tools',
+      text: 'Work with thumbnails, bookmarks, notes, signatures, and practical reading tools in one place.',
+      src: `${assetBase}LIGHT_SCREENSHOT_3.png`,
+    },
+  ]
 
-const essentials = [
-  {
-    title: "PDF and TXT support",
-    text: "Built around the file types users open every day for reading, reviewing, and reference work.",
-  },
-  {
-    title: "Light and dark reading",
-    text: "Visitors can preview both website themes, and the product story stays clean in either mode.",
-  },
-  {
-    title: "Simple purchase flow",
-    text: "A clear buy button keeps the page action-oriented and ready for your checkout link.",
-  },
-];
+  const darkImages = [
+    {
+      id: 'reader',
+      title: 'Main reader view',
+      text: 'Dark mode keeps the same focused layout while making longer reading sessions easier on the eyes.',
+      src: `${assetBase}DARK_SCREENSHOT_1.png`,
+    },
+    {
+      id: 'library',
+      title: 'Library and recents',
+      text: 'Use the same simple browsing flow and familiar navigation in a darker theme.',
+      src: `${assetBase}DARK_SCREENSHOT_2.png`,
+    },
+    {
+      id: 'tools',
+      title: 'Bookmarks, annotations, and tools',
+      text: 'See annotations, signatures, side panels, and reading controls in the dark workspace.',
+      src: `${assetBase}DARK_SCREENSHOT_3.png`,
+    },
+  ]
 
-const faqs = [
-  {
-    question: "What does PDFReadr help with?",
-    answer:
-      "It gives users a cleaner desktop workflow for opening, reading, organizing, searching, and printing PDF and TXT documents.",
-  },
-  {
-    question: "Who is it for?",
-    answer:
-      "It fits people who spend real time in documents: reading reports, reviewing files, studying material, or managing a personal library.",
-  },
-  {
-    question: "Why is it different from a basic viewer?",
-    answer:
-      "The product combines a focused reader workspace with tabs, search, bookmarks, recents, and practical reading tools instead of just showing a single file.",
-  },
-];
+  const previewImages = darkMode ? darkImages : lightImages
+  const safeActiveImage = Math.min(activeImage, Math.max(previewImages.length - 1, 0))
+  const selectedImage = previewImages[safeActiveImage] || previewImages[0]
 
-function makeTheme(darkMode) {
-  return darkMode
-    ? {
-        pageBg: "#050608",
-        pageGradient:
-          "radial-gradient(circle at top left, rgba(28,33,41,0.9), transparent 34%), linear-gradient(180deg, #050608 0%, #0b1117 100%)",
-        panel: "#11161d",
-        panelAlt: "#161d26",
-        border: "#293342",
-        text: "#f3f5f8",
-        muted: "#a9b4c2",
-        subtle: "#7f8c9d",
-        accent: "#7db3ff",
-        accentStrong: "#4f8ef7",
-        accentSoft: "rgba(125,179,255,0.12)",
-        buttonText: "#08111c",
-        buttonBg: "#dbe8ff",
-        secondaryBg: "#161d26",
-        secondaryText: "#f3f5f8",
-        cardShadow: "0 20px 60px rgba(0,0,0,0.34)",
-        screenshotBg: "#0d131a",
-      }
-    : {
-        pageBg: "#f7f8fa",
-        pageGradient:
-          "radial-gradient(circle at top left, rgba(241,228,200,0.55), transparent 28%), linear-gradient(180deg, #f7f8fa 0%, #f6f1e8 100%)",
-        panel: "#ffffff",
-        panelAlt: "#f6f8fb",
-        border: "#dce3eb",
-        text: "#18232f",
-        muted: "#5f6d80",
-        subtle: "#7c8898",
-        accent: "#2357b8",
-        accentStrong: "#1c4b9c",
-        accentSoft: "rgba(35,87,184,0.1)",
-        buttonText: "#ffffff",
-        buttonBg: "#2357b8",
-        secondaryBg: "#ffffff",
-        secondaryText: "#1b3557",
-        cardShadow: "0 18px 44px rgba(16,31,54,0.08)",
-        screenshotBg: "#eef2f7",
-      };
-}
+  const essentials = [
+    {
+      title: 'PDF and TXT support',
+      text: 'Open the document formats you use most for reading, review, and reference work.',
+    },
+    {
+      title: 'Light and dark mode',
+      text: 'Choose the reading style that feels right for daytime work or longer evening sessions.',
+    },
+    {
+      title: 'Annotations and signatures',
+      text: 'Mark up documents, add notes, and place signatures without leaving the reader.',
+    },
+  ]
 
-function ScreenshotFallback({ theme, item, darkMode }) {
+  const detailPoints = [
+    {
+      title: 'Focused reading',
+      text: 'PDFReadr keeps the document front and center, with an interface that supports the work instead of crowding it.',
+    },
+    {
+      title: 'Tabbed workflow',
+      text: 'Keep multiple PDF and TXT files open, switch quickly between tabs, and continue without reopening everything.',
+    },
+    {
+      title: 'Library and progress',
+      text: 'Recent files, favorites, bookmarks, and reading progress help you stay organized across daily document work.',
+    },
+    {
+      title: 'Fast local search',
+      text: 'Find files and return to useful content quickly with search designed for speed and privacy.',
+    },
+    {
+      title: 'Practical document tools',
+      text: 'Use zoom, thumbnails, page navigation, text selection, printing, annotations, and signatures in one workspace.',
+    },
+    {
+      title: 'Made for desktop use',
+      text: 'PDFReadr is built for a serious desktop workflow, not just a stripped-down file viewer.',
+    },
+  ]
+
+  const faqs = [
+    {
+      question: 'What does PDFReadr help with?',
+      answer:
+        'It gives you a cleaner desktop workflow for opening, reading, organizing, searching, annotating, signing, and printing PDF and TXT documents.',
+    },
+    {
+      question: 'Who is it for?',
+      answer:
+        'It works well for anyone who spends real time in documents, whether that means reading reports, reviewing files, studying material, filling forms, or keeping a personal library organized.',
+    },
+    {
+      question: 'Why is it different from a basic viewer?',
+      answer:
+        'PDFReadr brings together tabs, search, bookmarks, recents, annotations, signatures, and practical reading tools in one focused workspace instead of only showing a single file.',
+    },
+  ]
+
   return (
-    <div
-      style={{
-        width: "100%",
-        minHeight: 520,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: theme.screenshotBg,
-        color: theme.text,
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 860,
-          padding: 24,
-        }}
-      >
-        <div
-          style={{
-            border: `1px solid ${theme.border}`,
-            borderRadius: 22,
-            overflow: "hidden",
-            background: theme.panel,
-            boxShadow: theme.cardShadow,
-          }}
-        >
-          <div
-            style={{
-              height: 46,
-              borderBottom: `1px solid ${theme.border}`,
-              background: theme.panelAlt,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "0 16px",
-            }}
-          >
-            <span
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 999,
-                background: "#ff6157",
-              }}
-            />
-            <span
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 999,
-                background: "#ffbe2f",
-              }}
-            />
-            <span
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 999,
-                background: "#28c840",
-              }}
-            />
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "96px minmax(0, 1fr)",
-              gap: 16,
-              padding: 18,
-            }}
-          >
-            <div style={{ display: "grid", gap: 10 }}>
-              {[0, 1, 2].map((index) => (
-                <div
-                  key={index}
-                  style={{
-                    height: 62,
-                    borderRadius: 14,
-                    background: theme.panelAlt,
-                    border: `1px solid ${theme.border}`,
-                  }}
-                />
-              ))}
+    <div className={`min-h-screen ${theme.pageBg} ${theme.text} transition-colors duration-300`}>
+      <section className="mx-auto max-w-7xl px-6 py-8 sm:px-8 lg:px-10">
+        <header className={`flex flex-wrap items-center justify-between gap-4 border-b ${theme.border} pb-5`}>
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-14 items-center justify-center">
+              <img
+                src={logoSrc}
+                alt="PDFReadr logo"
+                className="h-12 w-12 object-contain"
+              />
             </div>
-
-            <div
-              style={{
-                minHeight: 300,
-                borderRadius: 18,
-                border: `1px solid ${theme.border}`,
-                background: theme.panel,
-                padding: 24,
-              }}
-            >
-              <div
-                style={{
-                  display: "inline-block",
-                  marginBottom: 12,
-                  padding: "6px 10px",
-                  borderRadius: 999,
-                  background: theme.accentSoft,
-                  color: theme.accent,
-                  fontSize: 12,
-                  fontWeight: 700,
-                }}
-              >
-                {darkMode ? "Dark preview" : "Light preview"}
-              </div>
-              <h3
-                style={{
-                  margin: "0 0 10px",
-                  fontSize: 28,
-                  letterSpacing: "-0.04em",
-                }}
-              >
-                {item.title}
-              </h3>
-              <p
-                style={{
-                  margin: "0 0 20px",
-                  color: theme.muted,
-                  lineHeight: 1.7,
-                  fontSize: 16,
-                }}
-              >
-                {item.caption}
-              </p>
-              <div style={{ display: "grid", gap: 10 }}>
-                <div
-                  style={{
-                    width: "54%",
-                    height: 10,
-                    borderRadius: 999,
-                    background: theme.accentStrong,
-                  }}
-                />
-                <div
-                  style={{
-                    width: "88%",
-                    height: 10,
-                    borderRadius: 999,
-                    background: theme.border,
-                  }}
-                />
-                <div
-                  style={{
-                    width: "76%",
-                    height: 10,
-                    borderRadius: 999,
-                    background: theme.border,
-                  }}
-                />
-                <div
-                  style={{
-                    width: "92%",
-                    height: 10,
-                    borderRadius: 999,
-                    background: theme.border,
-                  }}
-                />
-              </div>
+            <div>
+              <div className={`text-xs uppercase tracking-[0.3em] ${theme.subtle}`}>Windows Desktop Reader</div>
+              <h1 className="mt-1 text-lg font-semibold text-current">PDFReadr</h1>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
-function PreviewImage({ item, theme, darkMode }) {
-  const [hasError, setHasError] = useState(false);
-
-  if (hasError) {
-    return <ScreenshotFallback theme={theme} item={item} darkMode={darkMode} />;
-  }
-
-  return (
-    <img
-      src={item.src}
-      alt={item.title}
-      onError={() => setHasError(true)}
-      style={{
-        display: "block",
-        width: "100%",
-        maxHeight: 520,
-        objectFit: "contain",
-        background: theme.screenshotBg,
-      }}
-    />
-  );
-}
-
-function Brand({ theme, darkMode }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-      <div
-        style={{
-          width: 48,
-          height: 48,
-          borderRadius: 14,
-          background: darkMode
-            ? "linear-gradient(145deg, #7db3ff 0%, #4f8ef7 100%)"
-            : "linear-gradient(145deg, #4b8cff 0%, #2357b8 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-          boxShadow: theme.cardShadow,
-        }}
-      >
-        <img
-          src={logoSrc}
-          alt="PDFReadr logo"
-          style={{ width: 34, height: 34, objectFit: "contain" }}
-        />
-      </div>
-      <div>
-        <div
-          style={{
-            fontSize: 20,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            color: theme.text,
-          }}
-        >
-          PDFReadr
-        </div>
-        <div style={{ fontSize: 13, color: theme.subtle }}>
-          Fast local document reader
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function App() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [activeImage, setActiveImage] = useState(0);
-
-  const theme = useMemo(() => makeTheme(darkMode), [darkMode]);
-  const previewImages = darkMode ? darkImages : lightImages;
-  const safeActiveImage = Math.min(
-    activeImage,
-    Math.max(previewImages.length - 1, 0),
-  );
-  const selectedImage = previewImages[safeActiveImage] || previewImages[0];
-
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: theme.pageBg,
-        backgroundImage: theme.pageGradient,
-        color: theme.text,
-        fontFamily: '"Segoe UI", Arial, sans-serif',
-        transition: "background-color 180ms ease, color 180ms ease",
-      }}
-    >
-      <style>{`
-        * { box-sizing: border-box; }
-        body { margin: 0; }
-        button { font: inherit; }
-        @media (max-width: 900px) {
-          .preview-layout,
-          .overview-grid,
-          .essentials-grid,
-          .feature-grid,
-          .footer-row {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        @media (max-width: 720px) {
-          .hero-actions,
-          .top-actions,
-          .thumb-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
-
-      <div
-        style={{
-          maxWidth: 1180,
-          margin: "0 auto",
-          padding: "28px 20px 72px",
-        }}
-      >
-        <header
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 16,
-            flexWrap: "wrap",
-            paddingBottom: 20,
-            marginBottom: 40,
-            borderBottom: `1px solid ${theme.border}`,
-          }}
-        >
-          <Brand theme={theme} darkMode={darkMode} />
-
-          <div
-            className="top-actions"
-            style={{
-              display: "grid",
-              gridAutoFlow: "column",
-              gap: 12,
-              alignItems: "center",
-            }}
-          >
+          <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => {
-                setDarkMode((previous) => !previous);
-                setActiveImage(0);
+                setDarkMode((prev) => !prev)
+                setActiveImage(0)
               }}
-              style={{
-                height: 44,
-                padding: "0 16px",
-                borderRadius: 999,
-                border: `1px solid ${theme.border}`,
-                background: theme.secondaryBg,
-                color: theme.secondaryText,
-                cursor: "pointer",
-              }}
+              className={`rounded-full border px-4 py-2 text-sm font-medium transition ${theme.border} ${theme.buttonSecondary}`}
             >
-              {darkMode ? "Light mode" : "Dark mode"}
+              {darkMode ? 'Light mode' : 'Dark mode'}
             </button>
-
             <a
               href={productUrl}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 44,
-                padding: "0 18px",
-                borderRadius: 999,
-                background: theme.buttonBg,
-                color: theme.buttonText,
-                textDecoration: "none",
-                fontWeight: 700,
-              }}
+              className={`rounded-full px-5 py-2 text-sm font-medium transition ${theme.buttonPrimary}`}
             >
               Buy PDFReadr
             </a>
@@ -521,265 +195,91 @@ export default function App() {
         </header>
 
         <main>
-          <section style={{ paddingBottom: 24 }}>
-            <div
-              style={{
-                display: "inline-flex",
-                padding: "7px 12px",
-                borderRadius: 999,
-                background: theme.accentSoft,
-                color: theme.accent,
-                fontSize: 12,
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                marginBottom: 18,
-              }}
-            >
-              Windows Desktop Reader
-            </div>
+          <section className="py-12 sm:py-14">
+            <div className="mx-auto max-w-4xl text-center">
+              <div className={`inline-flex rounded-full border px-3 py-1 text-xs shadow-sm ${theme.pill} ${theme.border}`}>
+                Clean desktop reading for PDF and TXT
+              </div>
+              <h2 className="mt-5 text-3xl font-semibold leading-tight text-current sm:text-4xl lg:text-5xl">
+                Read, review, annotate, and sign documents in a cleaner desktop workspace.
+              </h2>
+              <p className={`mx-auto mt-4 max-w-2xl text-base leading-7 sm:text-lg ${theme.muted}`}>
+                PDFReadr is built for people who spend real time in documents. It combines focused reading, tabbed file handling,
+                fast local search, bookmarks, annotations, signatures, and printing in a layout that stays simple and easy to use.
+              </p>
 
-            <h1
-              style={{
-                margin: "0 0 14px",
-                maxWidth: 820,
-                fontSize: "clamp(2.4rem, 5vw, 4.6rem)",
-                lineHeight: 1.02,
-                letterSpacing: "-0.05em",
-              }}
-            >
-              A cleaner way to read, organize, and work through PDF and TXT files.
-            </h1>
-
-            <p
-              style={{
-                margin: "0 0 24px",
-                maxWidth: 760,
-                color: theme.muted,
-                fontSize: 18,
-                lineHeight: 1.75,
-              }}
-            >
-              PDFReadr is built for people who spend real time in documents. It
-              brings together focused reading, tabbed file handling, local search,
-              bookmarks, annotations, and printing in a layout that stays simple
-              and easy to use.
-            </p>
-
-            <div
-              className="hero-actions"
-              style={{
-                display: "grid",
-                gridAutoFlow: "column",
-                justifyContent: "start",
-                gap: 12,
-                marginBottom: 28,
-              }}
-            >
-              <a
-                href={productUrl}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: 48,
-                  padding: "0 22px",
-                  borderRadius: 14,
-                  background: theme.buttonBg,
-                  color: theme.buttonText,
-                  textDecoration: "none",
-                  fontWeight: 700,
-                }}
-              >
-                Buy Now
-              </a>
-              <a
-                href="#features"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: 48,
-                  padding: "0 22px",
-                  borderRadius: 14,
-                  background: theme.secondaryBg,
-                  color: theme.secondaryText,
-                  border: `1px solid ${theme.border}`,
-                  textDecoration: "none",
-                  fontWeight: 700,
-                }}
-              >
-                View Features
-              </a>
-            </div>
-
-            <div
-              style={{
-                border: `1px solid ${theme.border}`,
-                borderRadius: 30,
-                background: theme.panel,
-                boxShadow: theme.cardShadow,
-                padding: 18,
-              }}
-            >
-              <div
-                style={{
-                  position: "relative",
-                  borderRadius: 24,
-                  overflow: "hidden",
-                  border: `1px solid ${theme.border}`,
-                  background: theme.screenshotBg,
-                }}
-              >
-                <div
-                  style={{
-                    position: "absolute",
-                    left: "50%",
-                    top: 18,
-                    transform: "translateX(-50%)",
-                    zIndex: 1,
-                  }}
+              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <a
+                  href={productUrl}
+                  className={`rounded-2xl px-6 py-3 text-sm font-semibold transition ${theme.buttonPrimary}`}
                 >
+                  Buy Now
+                </a>
+                <a
+                  href="#features"
+                  className={`rounded-2xl border px-6 py-3 text-sm font-semibold transition ${theme.border} ${theme.buttonSecondary}`}
+                >
+                  View Features
+                </a>
+              </div>
+            </div>
+
+            <div id="preview" className="mx-auto mt-10 max-w-6xl">
+              <div className={`relative rounded-[2rem] border p-4 sm:p-5 ${theme.border} ${theme.panel} ${theme.shadow}`}>
+                <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2">
                   <a
+                    id="buy"
                     href={productUrl}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: 46,
-                      padding: "0 22px",
-                      borderRadius: 999,
-                      background: theme.buttonBg,
-                      color: theme.buttonText,
-                      textDecoration: "none",
-                      fontWeight: 700,
-                      boxShadow: theme.cardShadow,
-                    }}
+                    className={`inline-flex items-center rounded-full px-7 py-3 text-sm font-semibold transition ${theme.buttonPrimary}`}
                   >
                     Buy PDFReadr
                   </a>
                 </div>
 
-                <PreviewImage
-                  item={selectedImage}
-                  theme={theme}
-                  darkMode={darkMode}
-                />
+                <div className={`overflow-hidden rounded-[1.6rem] border ${theme.border} ${theme.cardAlt}`}>
+                  <div className="flex min-h-[620px] items-center justify-center">
+                    <img
+                      src={selectedImage.src}
+                      alt={selectedImage.title}
+                      className="h-auto max-h-[620px] w-full object-contain"
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div
-                className="preview-layout"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "0.84fr 1.16fr",
-                  gap: 16,
-                  marginTop: 18,
-                }}
-              >
-                <div
-                  style={{
-                    border: `1px solid ${theme.border}`,
-                    borderRadius: 20,
-                    background: theme.panel,
-                    padding: 18,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "inline-flex",
-                      padding: "5px 10px",
-                      borderRadius: 999,
-                      background: theme.accentSoft,
-                      color: theme.accent,
-                      fontSize: 12,
-                      fontWeight: 700,
-                      marginBottom: 12,
-                    }}
-                  >
-                    {darkMode ? "Dark preview" : "Light preview"}
+              <div className="mx-auto mt-8 grid max-w-5xl grid-cols-1 gap-4 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
+                <div className={`rounded-[1.35rem] border p-5 ${theme.border} ${theme.card} ${theme.softShadow}`}>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="text-base font-semibold text-current">{selectedImage.title}</div>
+                      <p className={`mt-2 text-sm leading-6 ${theme.muted}`}>{selectedImage.text}</p>
+                    </div>
+                    <div className={`rounded-full border px-3 py-1 text-[11px] ${theme.border} ${theme.pill}`}>
+                      {darkMode ? 'Dark preview' : 'Light preview'}
+                    </div>
                   </div>
-                  <h2
-                    style={{
-                      margin: "0 0 8px",
-                      fontSize: 22,
-                      letterSpacing: "-0.03em",
-                    }}
-                  >
-                    {selectedImage.title}
-                  </h2>
-                  <p
-                    style={{
-                      margin: 0,
-                      color: theme.muted,
-                      lineHeight: 1.75,
-                    }}
-                  >
-                    {selectedImage.caption}
-                  </p>
                 </div>
 
-                <div
-                  className="thumb-grid"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                    gap: 12,
-                  }}
-                >
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 auto-rows-fr">
                   {previewImages.map((image, index) => (
                     <button
-                      key={`${darkMode ? "dark" : "light"}-${image.id}`}
+                      key={`${darkMode ? 'dark' : 'light'}-${image.id}`}
                       type="button"
                       onClick={() => setActiveImage(index)}
                       aria-pressed={safeActiveImage === index}
-                      style={{
-                        padding: 0,
-                        textAlign: "left",
-                        borderRadius: 18,
-                        overflow: "hidden",
-                        border: `1px solid ${theme.border}`,
-                        background: theme.panel,
-                        cursor: "pointer",
-                        outline:
-                          safeActiveImage === index
-                            ? `2px solid ${theme.accentStrong}`
-                            : "none",
-                        boxShadow: safeActiveImage === index
-                          ? theme.cardShadow
-                          : "none",
-                      }}
+                      className={`flex h-full min-h-[182px] flex-col overflow-hidden rounded-[1.1rem] border text-left transition ${theme.border} ${theme.card} ${theme.softShadow} ${
+                        safeActiveImage === index ? `ring-2 ${theme.accentRing}` : ''
+                      }`}
                     >
-                      <div
-                        style={{
-                          aspectRatio: "4 / 3",
-                          background: theme.screenshotBg,
-                          borderBottom: `1px solid ${theme.border}`,
-                          overflow: "hidden",
-                        }}
-                      >
+                      <div className={`flex aspect-[4/3] items-center justify-center ${theme.cardAlt}`}>
                         <img
                           src={image.src}
                           alt={image.title}
-                          onError={(event) => {
-                            event.currentTarget.style.display = "none";
-                          }}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                          }}
+                          className="h-full w-full object-cover"
                         />
                       </div>
-                      <div style={{ padding: 12 }}>
-                        <div
-                          style={{
-                            fontSize: 14,
-                            fontWeight: 700,
-                            color: theme.text,
-                          }}
-                        >
-                          {image.title}
-                        </div>
+                      <div className="p-3">
+                        <div className="text-sm font-semibold text-current">{image.title}</div>
                       </div>
                     </button>
                   ))}
@@ -788,298 +288,122 @@ export default function App() {
             </div>
           </section>
 
-          <section
-            style={{
-              padding: "42px 0 10px",
-              borderTop: `1px solid ${theme.border}`,
-              marginTop: 28,
-            }}
-          >
-            <div
-              className="overview-grid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "0.95fr 1.05fr",
-                gap: 20,
-                alignItems: "start",
-              }}
-            >
+          <section className={`border-t py-14 ${theme.border}`}>
+            <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <div>
-                <div
-                  style={{
-                    color: theme.subtle,
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: "0.18em",
-                    textTransform: "uppercase",
-                    marginBottom: 12,
-                  }}
-                >
-                  Overview
-                </div>
-                <h2
-                  style={{
-                    margin: "0 0 12px",
-                    fontSize: 34,
-                    lineHeight: 1.1,
-                    letterSpacing: "-0.04em",
-                  }}
-                >
-                  Minimal on the page, substantial in the product.
-                </h2>
-                <p
-                  style={{
-                    margin: 0,
-                    color: theme.muted,
-                    lineHeight: 1.8,
-                    maxWidth: 520,
-                  }}
-                >
-                  The goal is the same as the reader itself: show what matters,
-                  reduce clutter, and make the next action obvious. Buyers get a
-                  clear view of the app, a simple understanding of the feature
-                  set, and a direct path to purchase.
+                <div className={`text-sm uppercase tracking-[0.25em] ${theme.subtle}`}>Overview</div>
+                <h3 className="mt-3 text-3xl font-semibold text-current sm:text-4xl">
+                  Clean on the page. Serious in the product.
+                </h3>
+                <p className={`mt-4 max-w-xl text-base leading-7 ${theme.muted}`}>
+                  PDFReadr is designed for people who spend real time in documents. It stays clean and easy to use while
+                  giving quick access to the tools that matter most.
                 </p>
               </div>
 
-              <div
-                className="feature-grid"
-                id="features"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  gap: 14,
-                }}
-              >
-                {featureGroups.map((item) => (
-                  <article
+              <div id="features" className="grid gap-4 sm:grid-cols-2">
+                {detailPoints.map((item) => (
+                  <div
                     key={item.title}
-                    style={{
-                      border: `1px solid ${theme.border}`,
-                      borderRadius: 20,
-                      background: theme.panel,
-                      padding: 18,
-                    }}
+                    className={`rounded-[1.35rem] border p-5 ${theme.border} ${theme.card} ${theme.softShadow}`}
                   >
-                    <h3
-                      style={{
-                        margin: "0 0 8px",
-                        fontSize: 18,
-                        letterSpacing: "-0.02em",
-                      }}
-                    >
-                      {item.title}
-                    </h3>
-                    <p
-                      style={{
-                        margin: 0,
-                        color: theme.muted,
-                        lineHeight: 1.75,
-                        fontSize: 15,
-                      }}
-                    >
-                      {item.text}
-                    </p>
-                  </article>
+                    <h3 className="text-base font-semibold text-current">{item.title}</h3>
+                    <p className={`mt-2 text-sm leading-6 ${theme.muted}`}>{item.text}</p>
+                  </div>
                 ))}
               </div>
             </div>
           </section>
 
-          <section
-            style={{
-              padding: "38px 0 10px",
-              borderTop: `1px solid ${theme.border}`,
-              marginTop: 28,
-            }}
-          >
-            <div
-              className="essentials-grid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                gap: 14,
-              }}
-            >
+          <section className={`border-t py-14 ${theme.border}`}>
+            <div className="grid gap-4 md:grid-cols-3">
               {essentials.map((item) => (
-                <article
+                <div
                   key={item.title}
-                  style={{
-                    border: `1px solid ${theme.border}`,
-                    borderRadius: 20,
-                    background: theme.panel,
-                    padding: 18,
-                  }}
+                  className={`rounded-[1.35rem] border p-5 ${theme.border} ${theme.card} ${theme.softShadow}`}
                 >
-                  <h3
-                    style={{
-                      margin: "0 0 8px",
-                      fontSize: 17,
-                    }}
-                  >
-                    {item.title}
-                  </h3>
-                  <p
-                    style={{
-                      margin: 0,
-                      color: theme.muted,
-                      lineHeight: 1.75,
-                      fontSize: 15,
-                    }}
-                  >
-                    {item.text}
-                  </p>
-                </article>
+                  <h3 className="text-base font-semibold text-current">{item.title}</h3>
+                  <p className={`mt-2 text-sm leading-6 ${theme.muted}`}>{item.text}</p>
+                </div>
               ))}
             </div>
           </section>
 
-          <section
-            id="buy"
-            style={{
-              padding: "42px 0 10px",
-              borderTop: `1px solid ${theme.border}`,
-              marginTop: 28,
-            }}
-          >
-            <div
-              style={{
-                border: `1px solid ${theme.border}`,
-                borderRadius: 28,
-                background: theme.panel,
-                padding: 28,
-                boxShadow: theme.cardShadow,
-              }}
-            >
-              <div
-                className="overview-grid"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 0.9fr",
-                  gap: 20,
-                  alignItems: "center",
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      color: theme.subtle,
-                      fontSize: 12,
-                      fontWeight: 700,
-                      letterSpacing: "0.18em",
-                      textTransform: "uppercase",
-                      marginBottom: 12,
-                    }}
-                  >
-                    Buy
-                  </div>
-                  <h2
-                    style={{
-                      margin: "0 0 10px",
-                      fontSize: 34,
-                      lineHeight: 1.1,
-                      letterSpacing: "-0.04em",
-                    }}
-                  >
-                    A straightforward page for a straightforward product.
-                  </h2>
-                  <p
-                    style={{
-                      margin: "0 0 18px",
-                      color: theme.muted,
-                      lineHeight: 1.8,
-                      maxWidth: 560,
-                    }}
-                  >
-                    Use the main buy button for your checkout link. The page is
-                    already set up to show the product clearly, reinforce the
-                    feature set, and keep the purchase step simple.
+          <section className={`border-t py-14 ${theme.border}`}>
+            <div className={`rounded-[1.7rem] border p-8 sm:p-10 lg:p-12 ${theme.border} ${theme.card} ${theme.softShadow}`}>
+              <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+                <div className="max-w-3xl">
+                  <div className={`text-sm uppercase tracking-[0.25em] ${theme.subtle}`}>Why it stands out</div>
+                  <h3 className="mt-3 text-3xl font-semibold text-current sm:text-4xl">
+                    More than a basic viewer.
+                  </h3>
+                  <p className={`mt-4 max-w-2xl text-base leading-7 ${theme.muted}`}>
+                    PDFReadr combines focused reading, tabs, search, bookmarks, recents, annotations, signatures, and
+                    printing in one clean desktop workspace built for everyday document use.
                   </p>
-                  <a
-                    href={productUrl}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: 48,
-                      padding: "0 22px",
-                      borderRadius: 14,
-                      background: theme.buttonBg,
-                      color: theme.buttonText,
-                      textDecoration: "none",
-                      fontWeight: 700,
-                    }}
-                  >
-                    Continue to Buy
-                  </a>
+                  <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                    <a
+                      href={productUrl}
+                      className={`rounded-2xl px-6 py-3 text-sm font-semibold transition ${theme.buttonPrimary}`}
+                    >
+                      Buy PDFReadr
+                    </a>
+                    <div className={`text-sm ${theme.subtle}`}>Replace this with your real checkout link</div>
+                  </div>
                 </div>
 
-                <div
-                  id="faq"
-                  style={{
-                    display: "grid",
-                    gap: 12,
-                  }}
-                >
-                  {faqs.map((item) => (
-                    <article
-                      key={item.question}
-                      style={{
-                        border: `1px solid ${theme.border}`,
-                        borderRadius: 18,
-                        background: theme.panelAlt,
-                        padding: 16,
-                      }}
-                    >
-                      <h3
-                        style={{
-                          margin: "0 0 6px",
-                          fontSize: 16,
-                        }}
-                      >
-                        {item.question}
-                      </h3>
-                      <p
-                        style={{
-                          margin: 0,
-                          color: theme.muted,
-                          lineHeight: 1.7,
-                          fontSize: 14,
-                        }}
-                      >
-                        {item.answer}
-                      </p>
-                    </article>
-                  ))}
+                <div className="grid gap-4 sm:grid-cols-1">
+                  <div className={`rounded-[1.3rem] border p-5 ${theme.border} ${theme.cardAlt}`}>
+                    <div className="text-sm font-semibold text-current">Built for real document work</div>
+                    <p className={`mt-2 text-sm leading-6 ${theme.muted}`}>
+                      Good for reading reports, reviewing files, filling forms, studying material, and managing a personal library.
+                    </p>
+                  </div>
+                  <div className={`rounded-[1.3rem] border p-5 ${theme.border} ${theme.cardAlt}`}>
+                    <div className="text-sm font-semibold text-current">Easy to start using</div>
+                    <p className={`mt-2 text-sm leading-6 ${theme.muted}`}>
+                      Open files quickly, move through pages smoothly, and keep useful tools close without overwhelming the workspace.
+                    </p>
+                  </div>
                 </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="buying" className={`border-t py-14 ${theme.border}`}>
+            <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+              <div>
+                <div className={`text-sm uppercase tracking-[0.25em] ${theme.subtle}`}>Questions</div>
+                <h3 className="mt-3 text-3xl font-semibold text-current sm:text-4xl">
+                  Useful details, without the extra noise.
+                </h3>
+                <p className={`mt-4 text-base leading-7 ${theme.muted}`}>
+                  Get a quick sense of what PDFReadr does, who it is for, and what makes it different from a simple viewer.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                {faqs.map((item) => (
+                  <div
+                    key={item.question}
+                    className={`rounded-[1.5rem] border p-6 ${theme.border} ${theme.card} ${theme.softShadow}`}
+                  >
+                    <div className={`text-sm font-semibold ${theme.text}`}>{item.question}</div>
+                    <p className={`mt-3 text-sm leading-6 ${theme.muted}`}>{item.answer}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
         </main>
 
-        <footer
-          style={{
-            marginTop: 38,
-            paddingTop: 18,
-            borderTop: `1px solid ${theme.border}`,
-            color: theme.subtle,
-            fontSize: 14,
-          }}
-        >
-          <div
-            className="footer-row"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr auto",
-              gap: 12,
-              alignItems: "center",
-            }}
-          >
-            <div>PDFReadr for Windows</div>
-            <div>Replace the buy link and screenshot files with your final assets</div>
+        <footer className={`border-t py-8 text-sm ${theme.border} ${theme.subtle}`}>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>© 2026 PDFReadr</div>
+            <div>Replace screenshot files and checkout link with your final production assets</div>
           </div>
         </footer>
-      </div>
+      </section>
     </div>
-  );
+  )
 }
