@@ -7,7 +7,7 @@ const assetBase =
     ? import.meta.env.BASE_URL
     : '/'
 
-const productUrl = '#buying'
+const productUrl = 'https://payhip.com/b/Cf7QH'
 const logoSrc = `${assetBase}logo.png`
 
 export default function PdfReadrLandingPage() {
@@ -348,7 +348,7 @@ export default function PdfReadrLandingPage() {
                     >
                       Buy PDFReadr
                     </a>
-                    <div className={`text-sm ${theme.subtle}`}>Replace this with your real checkout link</div>
+                    <div className={`text-sm ${theme.subtle}`}>https://payhip.com/b/Cf7QH</div>
                   </div>
                 </div>
 
@@ -400,7 +400,7 @@ export default function PdfReadrLandingPage() {
         <footer className={`border-t py-8 text-sm ${theme.border} ${theme.subtle}`}>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>© 2026 PDFReadr</div>
-            <div>Replace screenshot files and checkout link with your final production assets</div>
+            <div>https://payhip.com/b/Cf7QH</div>
           </div>
         </footer>
       </section>
